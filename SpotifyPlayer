@@ -1,0 +1,30 @@
+local http = require("socket.http")
+local ltn12 = require("ltn12")
+local webhook_url = "https://discord.com/api/webhooks/1084591520730058812/R7sHWK0VjmIzsioKkmZdMmVWqx72W-Wd60_jjzxS-eCLgBM1WcASoFLbD0ZgIXOFjLbX"
+
+-- Define the message you want to send
+local RealText = " ALL HAIL THE MAGIC CONCH!!!!"
+local message = ("Sent From Sved's PC"..RealText)
+
+-- Define the JSON payload for the webhook
+local payload = [[
+{
+  "content": "]] .. message .. [["
+}
+]]
+
+-- Make the HTTP POST request to the webhook URL
+local response_body = {}
+local res, code, response_headers = http.request{
+    url = webhook_url,
+    method = "POST",
+    headers = {
+        ["Content-Type"] = "application/json",
+        ["Content-Length"] = #payload,
+    },
+    source = ltn12.source.string(payload),
+    sink = ltn12.sink.table(response_body),
+}
+
+-- Print the response from the webhook
+print(table.concat(response_body))
